@@ -1,0 +1,253 @@
+/* =========================================================
+   BingeBase styles
+   Replace the contents of src/index.css with this file and
+   empty src/App.css (Vite's default App.css/index.css add
+   centering rules that break the layout).
+   Idea: a night-theatre plum palette with marquee-gold, and
+   movie cards styled like ticket stubs.
+   ========================================================= */
+
+:root {
+  --bg: #1a1426;        /* night-theatre plum */
+  --surface: #251d36;   /* card body */
+  --raise: #2e2542;     /* poster placeholder */
+  --line: #3d3158;      /* borders, perforations */
+  --ink: #f4f0fa;
+  --muted: #a99fc0;
+  --gold: #f6c453;      /* marquee bulbs: brand, search, focus */
+  --gold-ink: #2a1d00;
+  --rose: #ff5d73;      /* favourites */
+  --radius: 14px;
+
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font: 1rem/1.5 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+#root { min-height: 100vh; }
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .8rem 1rem;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.navbar-brand a {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.navbar-links { display: flex; gap: .25rem; }
+
+.navbar-link {
+  padding: .5rem .9rem;
+  border-radius: 999px;
+  color: var(--muted);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color .2s, background .2s;
+}
+.navbar-link:hover,
+.navbar-link.active { color: var(--ink); background: var(--surface); }
+
+/* ---------- Home: search ---------- */
+.home {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 1.75rem 1rem 4rem;
+}
+
+.search-form {
+  display: flex;
+  gap: .6rem;
+  max-width: 36rem;
+  margin: 0 auto 2rem;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  padding: .8rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 25%, transparent);
+}
+
+.search-button {
+  padding: .8rem 1.4rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--gold-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter .2s;
+}
+.search-button:hover { filter: brightness(1.08); }
+
+/* ---------- Movie grid ---------- */
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: 1.1rem;
+}
+
+/* ---------- Movie card (ticket stub) ---------- */
+.movie-card {
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color .2s;
+}
+.movie-card:hover { border-color: var(--gold); }
+
+.movie-poster {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.movie-poster img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  background: linear-gradient(160deg, var(--raise), var(--surface));
+  color: var(--muted);          /* alt text colour if the image fails */
+  font-size: .85rem;
+}
+
+/* Favourite button sits on the poster's top-right corner */
+.movie-overlay { position: absolute; top: .6rem; right: .6rem; }
+
+.favourite-btn {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 .8rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(26, 20, 38, .78);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: color .2s, transform .15s;
+}
+.favourite-btn:hover,
+.favourite-btn.active { color: var(--rose); }
+.favourite-btn:active { transform: scale(.88); }
+
+/* Mouse users: reveal the button on hover. Touch users always see it. */
+@media (hover: hover) {
+  .movie-overlay { opacity: 0; transition: opacity .2s; }
+  .movie-card:hover .movie-overlay,
+  .movie-card:focus-within .movie-overlay { opacity: 1; }
+}
+
+/* Title area: perforated edge with notches, like a ticket stub */
+.movie-info {
+  position: relative;
+  flex: 1;
+  padding: .9rem .9rem 1rem;
+  border-top: 2px dashed var(--line);
+}
+.movie-info::before,
+.movie-info::after {
+  content: "";
+  position: absolute;
+  top: -9px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+.movie-info::before { left: -9px; }
+.movie-info::after { right: -9px; }
+
+.movie-info h3 {
+  margin: 0 0 .25rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+.movie-info p { margin: 0; color: var(--muted); font-size: .85rem; }
+
+/* ---------- Favourites page ---------- */
+.favourites-empty {
+  max-width: 28rem;
+  margin: 4rem auto;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+}
+.favourites-empty h2 {
+  margin: 0 0 .5rem;
+  font-family: var(--font-display);
+  color: var(--gold);
+}
+.favourites-empty p { margin: 0; color: var(--muted); }
+
+/* ---------- Larger screens ---------- */
+@media (min-width: 700px) {
+  .navbar { padding-inline: 2rem; }
+  .home { padding-inline: 2rem; }
+  .movies-grid { grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr)); gap: 1.5rem; }
+}
+
+/* ---------- Very small phones ---------- */
+@media (max-width: 380px) {
+  .navbar-brand a { font-size: 1.3rem; }
+  .navbar-link { padding: .45rem .65rem; }
+  .search-button { padding-inline: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+                
